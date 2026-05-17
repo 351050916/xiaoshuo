@@ -43,6 +43,28 @@
             color:#999;
             font-size:15px;
         }
+        .qrcode-box{
+            text-align:center;
+            margin-top:20px;
+            margin-bottom:20px;
+            transition: all 0.3s ease;
+        }
+        /* 隐藏样式 */
+        .qrcode-box.hide{
+            display: none;
+        }
+        .qrcode-box img{
+            max-width:320px;
+            width:100%;
+            border-radius:12px;
+            box-shadow:0 2px 8px rgba(0,0,0,0.1);
+            border: 1px solid #eee;
+        }
+        .qrcode-tip{
+            font-size:14px;
+            color:#666;
+            margin-top:10px;
+        }
     </style>
 </head>
 <body>
@@ -50,11 +72,16 @@
         <div class="title">小说、吃瓜资源在线搜索</div>
         <input id="search" placeholder="请输入文件名称关键词搜索...">
         <div class="tip">输入小说、漫画、吃瓜名字即可搜索，比如斗破苍穹</div>
+
+        <div class="qrcode-box" id="qrcodeBox">
+            <img src="https://i.postimg.cc/0jxv3rpF/69dff9ca304bdb0c81d83d6ef221960.jpg" alt="index">
+            <div class="qrcode-tip">想看更多小说，请扫码进群</div>
+        </div>
+
         <div class="result-box" id="resultBox"></div>
     </div>
 
 <script>
-// ====================== 【仅在这里添加文件 其他不用动】 ======================
 let fileData = [
 {name:"蛇窟", link:"https://pan.xunlei.com/s/VOsaLYfUzOgMFu_1UZvWJzT8A1?pwd=m4bm#"},
 {name:"青色焰火", link:"https://pan.xunlei.com/s/VOsaPODgt9Jxq5XolVRemjSZA1?pwd=9e2m"},
@@ -1741,11 +1768,12 @@ let fileData = [
 {name:"晋江言情文积分榜前50本合集-1.zip", link:"https://pan.quark.cn/s/f562bcfb23f2"},
 {name:"陈情令见面会", link:"https://pan.xunlei.com/s/VOslAQXpP8Yz1cykHFLs1jqaA1?pwd=dfwp#"},
 {name:"陈情令花絮", link:"https://pan.baidu.com/s/13KYp5Ut9oLvEz_5dL0O1Bw?pwd=8888 提取码: 8888 "},
+{name:"《蒹葭》", link:"https://pan.baidu.com/s/1SWmruuCJZfLuc2FUNJinIQ?pwd=8888"},
 ];
-// =========================================================================
 
 const searchInp = document.getElementById('search');
 const resultBox = document.getElementById('resultBox');
+const qrcodeBox = document.getElementById('qrcodeBox');
 
 resultBox.innerHTML = '';
 
@@ -1753,13 +1781,19 @@ searchInp.oninput = function(){
     let key = this.value.trim();
     if(!key){
         resultBox.innerHTML = '';
+        // 无搜索内容 显示二维码
+        qrcodeBox.classList.remove('hide');
         return;
     }
     let matchList = fileData.filter(item=>item.name.includes(key));
     if(matchList.length === 0){
         resultBox.innerHTML = '<div class="empty">暂无匹配文件</div>';
+        // 无结果也隐藏二维码
+        qrcodeBox.classList.add('hide');
         return;
     }
+    // 有搜索结果 隐藏二维码
+    qrcodeBox.classList.add('hide');
     let html = '';
     matchList.forEach(v=>{
         html += `<div class="item" onclick="window.open('${v.link}','_blank')">${v.name}</div>`;
